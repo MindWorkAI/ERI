@@ -4,8 +4,9 @@
         <TargetFramework>net9.0</TargetFramework>
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
-        <NoDefaultLaunchSettingsFile>True</NoDefaultLaunchSettingsFile>
-        <GenerateDocumentationFile>true</GenerateDocumentationFile>
+
+        <OpenApiGenerateDocumentsOnBuild>true</OpenApiGenerateDocumentsOnBuild>
+        <OpenApiDocumentsDirectory>.\</OpenApiDocumentsDirectory>
     </PropertyGroup>
 
     <ItemGroup>
