@@ -1,5 +1,7 @@
 using System.Text.Json.Serialization;
 
+using Scalar.AspNetCore;
+
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.ConfigureHttpJsonOptions(options =>
 {
@@ -10,12 +12,10 @@ builder.Services.AddOpenApi();
 
 var app = builder.Build();
 app.MapOpenApi();
-
-app.UseSwaggerUi(settings =>
+app.MapScalarApiReference(options =>
 {
-    settings.Path = "/openapi";
-    settings.DocumentPath = "/openapi/v1.json";
-    settings.DocumentTitle = "(E)xternal (D)ata AP(I) for AI Studio";
+    options.Title = "EDI - (E)xternal (D)ata AP(I) for AI Studio";
+    options.HiddenClients = true;
 });
 
 app.MapGet("/auth/methods", () => new List<AuthMethods> { AuthMethods.NONE })
