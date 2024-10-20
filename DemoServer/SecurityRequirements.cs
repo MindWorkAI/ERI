@@ -1,3 +1,5 @@
+// ReSharper disable NotAccessedPositionalProperty.Global
+
 namespace DemoServer;
 
 /// <summary>
