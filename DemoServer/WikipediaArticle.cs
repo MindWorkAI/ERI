@@ -1,3 +1,3 @@
 namespace DemoServer;
 
-readonly record struct WikipediaArticle(string Title, string Url);
+public readonly record struct WikipediaArticle(string Title, string Url);
