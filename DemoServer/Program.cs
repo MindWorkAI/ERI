@@ -3,12 +3,11 @@ using System.Text.Json.Serialization;
 using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddOpenApi();
 builder.Services.ConfigureHttpJsonOptions(options =>
 {
     options.SerializerOptions.Converters.Add(new JsonStringEnumConverter());
 });
-
-builder.Services.AddOpenApi();
 
 var app = builder.Build();
 app.MapOpenApi();
