@@ -20,10 +20,12 @@ app.UseSwaggerUi(settings =>
 
 app.MapGet("/auth/methods", () => new List<AuthMethods> { AuthMethods.NONE })
     .WithDescription("Get the available authentication methods.")
+    .WithName("GetAuthMethods")
     .WithTags("Authentication");
 
 app.MapGet("/security/requirements", () => new SecurityRequirements(ProviderType.SELF_HOSTED))
     .WithDescription("Get the security requirements for this data source.")
+    .WithName("GetSecurityRequirements")
     .WithTags("Security");
 
 app.Run();
