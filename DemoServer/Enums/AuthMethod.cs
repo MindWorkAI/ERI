@@ -1,6 +1,6 @@
 namespace DemoServer.Enums;
 
-public enum AuthMethods
+public enum AuthMethod
 {
     NONE,
     KERBEROS,

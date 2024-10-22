@@ -1,6 +1,6 @@
 // ReSharper disable NotAccessedPositionalProperty.Global
 
-namespace DemoServer;
+namespace DemoServer.DataModel;
 
 /// <summary>
 /// Represents the security requirements for this data source.
