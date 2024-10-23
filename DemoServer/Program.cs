@@ -1,48 +1,67 @@
+using System.Reflection;
 using System.Text.Json.Serialization;
 
 using DemoServer.DataModel;
 
-using Microsoft.AspNetCore.Mvc;
+using Microsoft.OpenApi.Models;
 
 var validTokens = new HashSet<string>();
 
 var builder = WebApplication.CreateBuilder(args);
-builder.Services.AddOpenApi(options =>
-{
-    options.AddDocumentTransformer<TokenSecuritySchemeTransformer>();
-    options.AddDocumentTransformer((document, _, _) =>
-    {
-        document.Info = new()
-        {
-            Title = "EDI - (E)xternal (D)ata AP(I) for AI Studio",
-            Version = "v1",
-            Description = """
-                          This API serves as a contract between AI Studio and any external data sources for RAG
-                          (retrieval-augmented generation). AI Studio acts as the client (the augmentation and
-                          generation parts) and the data sources act as the server (the retrieval part). The data
-                          sources implement some form of data retrieval and return a suitable context to AI Studio.
-                          AI Studio, in turn, handles the integration of appropriate LLMs (augmentation & generation).
-                          Data sources can be document or graph databases, or even a file system, for example. They
-                          will likely implement an appropriate retrieval process by using some kind of embedding.
-                          However, this API does not inherently require any embedding, as data processing is
-                          implemented decentralized by the data sources.
-                          """
-        };
-        return Task.CompletedTask;
-    });
-});
-
 builder.Services.ConfigureHttpJsonOptions(options =>
 {
     options.SerializerOptions.Converters.Add(new JsonStringEnumConverter());
 });
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen(c =>
+{
+    var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+    c.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
+    c.SchemaFilter<EnumSchemaFilter>();
+    c.SwaggerDoc("v1", new OpenApiInfo
+    {
+        Title = "EDI - (E)xternal (D)ata AP(I) for AI Studio",
+        Version = "v1",
+        Description = """
+                      This API serves as a contract between AI Studio and any external data sources for RAG
+                      (retrieval-augmented generation). AI Studio acts as the client (the augmentation and
+                      generation parts) and the data sources act as the server (the retrieval part). The data
+                      sources implement some form of data retrieval and return a suitable context to AI Studio.
+                      AI Studio, in turn, handles the integration of appropriate LLMs (augmentation & generation).
+                      Data sources can be document or graph databases, or even a file system, for example. They
+                      will likely implement an appropriate retrieval process by using some kind of embedding.
+                      However, this API does not inherently require any embedding, as data processing is
+                      implemented decentralized by the data sources.
+                      """
+    });
+    
+    var securityScheme = new OpenApiSecurityScheme
+    {
+        Name = "token",
+        Description = "Enter the EDI token yielded by the authentication process at /auth.",
+        In = ParameterLocation.Header,
+        Type = SecuritySchemeType.ApiKey,
+        Scheme = "token",
+        Reference = new OpenApiReference
+        {
+            Id = "EDI Token",
+            Type = ReferenceType.SecurityScheme
+        }
+    };
+    
+    c.AddSecurityDefinition(securityScheme.Reference.Id, securityScheme);
+    c.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {securityScheme, [] }
+    });
+});
 
 var app = builder.Build();
-app.MapOpenApi();
-app.MapScalarApiReference(options =>
+app.MapSwagger();
+app.UseSwagger();
+app.UseSwaggerUI(c =>
 {
-    options.Title = "EDI - (E)xternal (D)ata AP(I) for AI Studio";
-    options.HiddenClients = true;
+    c.SwaggerEndpoint("v1/swagger.json", "v1");
 });
 
 app.Use(async (context, next) =>
