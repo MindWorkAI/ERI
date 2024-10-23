@@ -4,7 +4,7 @@ using DemoServer.DataModel;
 
 using Microsoft.AspNetCore.Mvc;
 
-using Scalar.AspNetCore;
+var validTokens = new HashSet<string>();
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddOpenApi(options =>
@@ -45,11 +45,52 @@ app.MapScalarApiReference(options =>
     options.HiddenClients = true;
 });
 
+app.Use(async (context, next) =>
+{
+    if(context.Request.Path.StartsWithSegments("/swagger"))
+    {
+        await next(context);
+        return;
+    }
+    
+    if(context.Request.Path.StartsWithSegments("/auth"))
+    {
+        await next(context);
+        return;
+    }
+    
+    var tokens = context.Request.Headers["token"];
+    if (tokens.Count == 0)
+    {
+        context.Response.StatusCode = 401;
+        await context.Response.WriteAsJsonAsync(new { error = "No token provided." });
+        return;
+    }
+    
+    var token = tokens[0];
+    if (string.IsNullOrWhiteSpace(token))
+    {
+        context.Response.StatusCode = 401;
+        await context.Response.WriteAsJsonAsync(new { error = "Empty token provided." });
+        return;
+    }
+    
+    if (!validTokens.Contains(token))
+    {
+        context.Response.StatusCode = 401;
+        await context.Response.WriteAsJsonAsync(new { error = "Invalid token provided." });
+        return;
+    }
+    
+    // Call the next delegate/middleware in the pipeline.
+    await next(context);
+});
+
 #region Implementing the EDI
 
 #region Data Source
 
-app.MapGet("/dataSource", ([FromHeader] string token) => new DataSourceInfo("DEMO: Wikipedia Links", "Contains some links to Wikipedia articles."))
+app.MapGet("/dataSource", () => new DataSourceInfo("DEMO: Wikipedia Links", "Contains some links to Wikipedia articles."))
     .WithDescription("Get information about the data source.")
     .WithName("GetDataSourceInfo")
     .WithTags("Data Source");
@@ -58,7 +99,7 @@ app.MapGet("/dataSource", ([FromHeader] string token) => new DataSourceInfo("DEM
 
 #region Security
 
-app.MapGet("/security/requirements", ([FromHeader] string token) => new SecurityRequirements(ProviderType.SELF_HOSTED))
+app.MapGet("/security/requirements", () => new SecurityRequirements(ProviderType.SELF_HOSTED))
     .WithDescription("Get the security requirements for this data source.")
     .WithName("GetSecurityRequirements")
     .WithTags("Security");
@@ -104,7 +145,9 @@ app.MapPost("/auth", (HttpContext context, AuthMethod authMethod) =>
     {
         case AuthMethod.NONE:
             // We don't need to authenticate (part 1 of the process), so we return a token:
-            return new AuthResponse(true, Guid.NewGuid().ToString(), null);
+            var token = Guid.NewGuid().ToString();
+            validTokens.Add(token);
+            return new AuthResponse(true, token, null);
         
         case AuthMethod.USERNAME_PASSWORD:
             // Check if the username and password are present (part 1 of the process):
@@ -116,7 +159,9 @@ app.MapPost("/auth", (HttpContext context, AuthMethod authMethod) =>
                 return new AuthResponse(false, null, "Invalid username and/or password.");
                 
             // Return a token (part 2 of the process):
-            return new AuthResponse(true, Guid.NewGuid().ToString(), null);
+            token = Guid.NewGuid().ToString();
+            validTokens.Add(token);
+            return new AuthResponse(true, token, null);
     }
     
     return new AuthResponse(false, null, "Unknown authentication method.");
@@ -129,7 +174,7 @@ app.MapPost("/auth", (HttpContext context, AuthMethod authMethod) =>
 
 #region Embedding
 
-app.MapGet("/embedding/info", ([FromHeader] string token) => new List<EmbeddingInfo>
+app.MapGet("/embedding/info", () => new List<EmbeddingInfo>
 {
     //
     // Just to demonstrate the usage of the EmbeddingInfo record.
@@ -155,7 +200,7 @@ app.MapGet("/embedding/info", ([FromHeader] string token) => new List<EmbeddingI
 
 #region Retrieval
 
-app.MapGet("/retrieval/info", ([FromHeader] string token) => new List<RetrievalInfo>
+app.MapGet("/retrieval/info", () => new List<RetrievalInfo>
 {
     new ()
     {
@@ -169,7 +214,7 @@ app.MapGet("/retrieval/info", ([FromHeader] string token) => new List<RetrievalI
     .WithName("GetRetrievalInfo")
     .WithTags("Retrieval");
 
-app.MapPost("/retrieval", (RetrievalRequest request, [FromHeader] string token) =>
+app.MapPost("/retrieval", (RetrievalRequest request) =>
 {
     //
     // We use a simple demo retrieval process here, without any embedding.
