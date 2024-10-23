@@ -219,7 +219,7 @@ app.MapPost("/retrieval", (RetrievalRequest request) =>
 {
     //
     // We use a simple demo retrieval process here, without any embedding.
-    // Wo looking for matching keywords in the user prompt and return the
+    // We're looking for matching keywords in the user prompt and return the
     // corresponding Wikipedia articles.
     //
     
