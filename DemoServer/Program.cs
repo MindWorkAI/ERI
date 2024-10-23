@@ -204,6 +204,7 @@ app.MapGet("/retrieval/info", () => new List<RetrievalInfo>
 {
     new ()
     {
+        Id = "DEMO-1",
         Name = "DEMO: Wikipedia Links",
         Description = "Contains some links to Wikipedia articles.",
         Link = null,
