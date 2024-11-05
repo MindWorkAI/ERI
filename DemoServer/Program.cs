@@ -44,7 +44,7 @@ builder.Services.AddSwaggerGen(c =>
         Scheme = "token",
         Reference = new OpenApiReference
         {
-            Id = "EDI Token",
+            Id = "EDI_Token",
             Type = ReferenceType.SecurityScheme
         }
     };
