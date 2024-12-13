@@ -20,14 +20,14 @@ builder.Services.AddSwaggerGen(c =>
     c.SchemaFilter<EnumSchemaFilter>();
     c.SwaggerDoc("v1", new OpenApiInfo
     {
-        Title = "EDI - (E)xternal (D)ata AP(I) for AI Studio",
+        Title = "ERI - (E)xternal (R)etrieval (I)nterface",
         Version = "v1",
         Description = """
-                      This API serves as a contract between AI Studio and any external data sources for RAG
-                      (retrieval-augmented generation). AI Studio acts as the client (the augmentation and
+                      This API serves as a contract between LLM tools like AI Studio and any external data sources for RAG
+                      (retrieval-augmented generation). The tool, e.g., AI Studio acts as the client (the augmentation and
                       generation parts) and the data sources act as the server (the retrieval part). The data
-                      sources implement some form of data retrieval and return a suitable context to AI Studio.
-                      AI Studio, in turn, handles the integration of appropriate LLMs (augmentation & generation).
+                      sources implement some form of data retrieval and return a suitable context to the LLM tool.
+                      The LLM tool, in turn, handles the integration of appropriate LLMs (augmentation & generation).
                       Data sources can be document or graph databases, or even a file system, for example. They
                       will likely implement an appropriate retrieval process by using some kind of embedding.
                       However, this API does not inherently require any embedding, as data processing is
@@ -38,13 +38,13 @@ builder.Services.AddSwaggerGen(c =>
     var securityScheme = new OpenApiSecurityScheme
     {
         Name = "token",
-        Description = "Enter the EDI token yielded by the authentication process at /auth.",
+        Description = "Enter the ERI token yielded by the authentication process at /auth.",
         In = ParameterLocation.Header,
         Type = SecuritySchemeType.ApiKey,
         Scheme = "token",
         Reference = new OpenApiReference
         {
-            Id = "EDI_Token",
+            Id = "ERI_Token",
             Type = ReferenceType.SecurityScheme
         }
     };
@@ -105,7 +105,7 @@ app.Use(async (context, next) =>
     await next(context);
 });
 
-#region Implementing the EDI
+#region Implementing the ERI
 
 #region Data Source
 
