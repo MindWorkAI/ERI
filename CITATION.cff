@@ -1,0 +1,50 @@
+# This CITATION.cff file was generated with cffinit.
+# Visit https://bit.ly/cffinit to generate yours today!
+
+cff-version: 1.2.0
+title: ERI - External Retrieval Interface
+message: >-
+  When you want to cite the ERI in your scientific work,
+  please use these metadata.
+type: software
+authors:
+  - given-names: Thorsten
+    family-names: Sommer
+    email: thorsten.sommer@dlr.de
+    affiliation: Deutsches Zentrum für Luft- und Raumfahrt (DLR)
+    orcid: 'https://orcid.org/0000-0002-3264-9934'
+  - name: Open Source Community
+repository-code: 'https://github.com/MindWorkAI/ERI'
+url: 'https://mindworkai.org/'
+abstract: >-
+  The ERI is the External Retrieval Interface which could be
+  used by AI Studio and other tools. The ERI acts as a
+  contract between decentralized data sources and LLM tools.
+  The ERI is implemented by the data sources, allowing them
+  to be integrated into, e.g., AI Studio later. This means
+  that the data sources assume the server role and the LLM
+  tool assumes the client role of the API. This approach
+  serves to realize a Retrieval-Augmented Generation (RAG)
+  process with external data. You can imagine it like this:
+  Hypothetically, when Wikipedia implemented the ERI, it
+  would vectorize all pages using an embedding method. All
+  of Wikipedia's data would remain with Wikipedia, including
+  the vector database (decentralized approach). Then, any AI
+  Studio user could add Wikipedia as a data source to
+  significantly reduce the hallucination of the LLM in
+  knowledge questions.
+
+
+  When you want to integrate your own local data into AI
+  Studio, you don't need an ERI. Instead, AI Studio will
+  offer an RAG process for this in the future. Is your
+  organization interested in integrating internal company
+  data into AI Studio? Here you will find the interactive
+  documentation of the related OpenAPI interface.
+keywords:
+  - LLM
+  - AI
+  - Orchestration
+  - Retrieval-Augmented Generation
+  - RAG
+  - Decentralized
