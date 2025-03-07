@@ -1,4 +1,5 @@
 using System.Reflection;
+using System.Text.Json;
 using System.Text.Json.Serialization;
 
 using DemoServer.DataModel;
@@ -11,6 +12,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.ConfigureHttpJsonOptions(options =>
 {
     options.SerializerOptions.Converters.Add(new JsonStringEnumConverter());
+    options.SerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
 });
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
@@ -32,6 +34,10 @@ builder.Services.AddSwaggerGen(c =>
                       will likely implement an appropriate retrieval process by using some kind of embedding.
                       However, this API does not inherently require any embedding, as data processing is
                       implemented decentralized by the data sources.
+                      
+                      The client expects that all fields in the JSON responses from an ERI server are named according
+                      to camel case or Pascal case conventions. The client's JSON objects for requests use camel case
+                      for the field names.
                       """
     });
     
@@ -159,7 +165,6 @@ app.MapPost("/auth", (HttpContext context, AuthMethod authMethod) =>
     // method. All methods returned by /auth/methods are valid. (2) The server
     // then returns a token that the client can use for further requests.
     //
-    
     switch (authMethod)
     {
         case AuthMethod.NONE:
