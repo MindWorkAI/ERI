@@ -6,7 +6,7 @@
 public enum Role
 {
     NONE,
-    UNKNOW,
+    UNKNOWN,
     
     SYSTEM,
     USER,
