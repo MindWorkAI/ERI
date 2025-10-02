@@ -4,6 +4,8 @@ namespace DemoServer.Handler;
 
 public static class Retrieval
 {
+    private const string TAG = "Retrieval";
+    
     private static readonly RetrievalInfo[] RETRIEVAL_INFO = 
     [
         new ()
@@ -16,22 +18,24 @@ public static class Retrieval
         },
     ];
 
-    public static void AddRetrievalHandlers(this WebApplication app)
+    public static void AddRetrievalHandlers(this IEndpointRouteBuilder app)
     {
-        app.MapGet("/retrieval/info", GetRetrievalInfo)
-            .WithDescription("Get information about the retrieval processes implemented by this data source.")
-            .WithName("GetRetrievalInfo")
-            .WithTags("Retrieval");
+        var router = app.MapGroup("/retrieval")
+            .WithTags(TAG)
+            .WithApiVersionSet(Versions.SET_ALL_VERSIONS);
 
-        app.MapPost("/retrieval", Retrieve)
+        router.MapGet("/info", GetRetrievalInfo)
+            .WithDescription("Get information about the retrieval processes implemented by this data source.")
+            .WithName("GetRetrievalInfo");
+
+        router.MapPost("/", Retrieve)
             .WithDescription("Retrieve information from the data source.")
-            .WithName("Retrieve")
-            .WithTags("Retrieval");
+            .WithName("Retrieve");
     }
 
-    private static IEnumerable<RetrievalInfo> GetRetrievalInfo() => RETRIEVAL_INFO;
+    private static RetrievalInfo[] GetRetrievalInfo() => RETRIEVAL_INFO;
 
-    private static IEnumerable<Context> Retrieve(RetrievalRequest request)
+    private static List<Context> Retrieve(RetrievalRequest request)
     {
         //
         // We use a simple demo retrieval process here, without any embedding.
@@ -53,11 +57,11 @@ public static class Retrieval
             {
                 Name = article.Title,
                 Category = "Wikipedia Article",
-                Path = null,
+                Path = article.Url,
                 Type = ContentType.TEXT,
                 MatchedContent = article.Url,
                 SurroundingContent = [],
-                Links = [ article.Url ],
+                Links = [],
             });
         }
     

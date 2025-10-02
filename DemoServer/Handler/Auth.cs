@@ -4,6 +4,7 @@ namespace DemoServer.Handler;
 
 public static class AuthHandler
 {
+    private const string TAG = "Authentication";
     private static readonly HashSet<string> VALID_TOKENS = new();
     
     private static readonly AuthScheme[] ALLOWED_AUTH_SCHEMES =
@@ -25,31 +26,37 @@ public static class AuthHandler
         },
     ];
 
-    public static void AddAuthHandlers(this WebApplication app)
+    public static void AddAuthHandlers(this IEndpointRouteBuilder app)
+    {
+        var router = app.MapGroup("/auth")
+            .WithTags(TAG)
+            .WithApiVersionSet(Versions.SET_ALL_VERSIONS);
+
+        router.MapGet("/methods", GetAuthMethods)
+            .WithDescription("Get the available authentication methods.")
+            .WithName("GetAuthMethods");
+
+        router.MapPost("/", PerformAuth)
+            .WithDescription("Authenticate with the data source to get a token for further requests.")
+            .WithName("Authenticate");
+    }
+
+    public static void AddAuthFilter(this WebApplication app)
     {
         app.Use(EnsureAuth);
-        app.MapGet("/auth/methods", GetAuthMethods)
-            .WithDescription("Get the available authentication methods.")
-            .WithName("GetAuthMethods")
-            .WithTags("Authentication");
-
-        app.MapPost("/auth", PerformAuth)
-            .WithDescription("Authenticate with the data source to get a token for further requests.")
-            .WithName("Authenticate")
-            .WithTags("Authentication");
     }
 
     private static IEnumerable<AuthScheme> GetAuthMethods() => ALLOWED_AUTH_SCHEMES;
 
     private static async Task EnsureAuth(HttpContext context, RequestDelegate next)
     {
-        if(context.Request.Path.StartsWithSegments("/swagger"))
+        if(context.Request.Path.StartsWithSegments("/specification"))
         {
             await next(context);
             return;
         }
-    
-        if(context.Request.Path.StartsWithSegments("/auth"))
+        
+        if(context.Request.Path.Value!.Contains("/auth"))
         {
             await next(context);
             return;

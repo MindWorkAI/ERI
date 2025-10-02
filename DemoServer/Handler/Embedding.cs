@@ -4,6 +4,7 @@ namespace DemoServer.Handler;
 
 public static class Embedding
 {
+    private const string TAG = "Embedding";
     private static readonly EmbeddingInfo[] EMBEDDING_INFO =
     [
         //
@@ -23,13 +24,16 @@ public static class Embedding
         },
     ];
 
-    public static void AddEmbeddingHandlers(this WebApplication app)
+    public static void AddEmbeddingHandlers(this IEndpointRouteBuilder app)
     {
-        app.MapGet("/embedding/info", GetEmbeddingInfo)
+        var router = app.MapGroup("/embedding")
+            .WithTags(TAG)
+            .WithApiVersionSet(Versions.SET_ALL_VERSIONS);
+
+        router.MapGet("/info", GetEmbeddingInfo)
             .WithDescription("Get information about the used embedding(s).")
-            .WithName("GetEmbeddingInfo")
-            .WithTags("Embedding");
+            .WithName("GetEmbeddingInfo");
     }
 
-    private static IEnumerable<EmbeddingInfo> GetEmbeddingInfo() => EMBEDDING_INFO;
+    private static EmbeddingInfo[] GetEmbeddingInfo() => EMBEDDING_INFO;
 }

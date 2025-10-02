@@ -4,14 +4,18 @@ namespace DemoServer.Handler;
 
 public static class Security
 {
-    private static readonly SecurityRequirements SECURITY_REQUIREMENTS = new(ProviderType.SELF_HOSTED);
+    private const string TAG = "Security";
+    private static readonly SecurityRequirements SECURITY_REQUIREMENTS = new(ProviderType.ANY);
 
-    public static void AddSecurityHandlers(this WebApplication app)
+    public static void AddSecurityHandlers(this IEndpointRouteBuilder app)
     {
-        app.MapGet("/security/requirements", GetSecurityRequirements)
+        var router = app.MapGroup("/security")
+            .WithTags(TAG)
+            .WithApiVersionSet(Versions.SET_ALL_VERSIONS);
+        
+        router.MapGet("/requirements", GetSecurityRequirements)
             .WithDescription("Get the security requirements for this data source.")
-            .WithName("GetSecurityRequirements")
-            .WithTags("Security");
+            .WithName("GetSecurityRequirements");
     }
 
     private static SecurityRequirements GetSecurityRequirements() => SECURITY_REQUIREMENTS;
