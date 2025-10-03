@@ -8,6 +8,7 @@ builder.Services.AddAPIVersioning();
 builder.Services.ConfigureOptions<ConfigureSwaggerGen>();
 
 var app = builder.Build();
+app.AddServerHandlers();
 app.AddAuthHandlers();
 app.AddSecurityHandlers();
 app.AddEmbeddingHandlers();

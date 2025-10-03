@@ -17,6 +17,11 @@ public static class Versions
         .HasApiVersion(V2_0)
         .Build();
     
+    public static readonly ApiVersionSet SET_V1_1_AND_ABOVE = new ApiVersionSetBuilder(null)
+        .HasApiVersion(V1_1)
+        .HasApiVersion(V2_0)
+        .Build();
+    
     public static readonly ApiVersionSet SET_ALL_V1_ONLY = new ApiVersionSetBuilder(null)
         .HasApiVersion(V1_0)
         .HasApiVersion(V1_1)

@@ -110,6 +110,12 @@ public static class AuthHandler
             return;
         }
         
+        if(context.Request.Path.StartsWithSegments("/server"))
+        {
+            await next(context);
+            return;
+        }
+        
         if(context.Request.Path.Value!.Contains("/auth"))
         {
             await next(context);
