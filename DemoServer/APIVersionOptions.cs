@@ -15,6 +15,7 @@ public static class APIVersionOptions
         }).AddApiExplorer(options =>
         {
             options.GroupNameFormat = "'v'VVVV";
+            options.FormatGroupName = (_, version) => $"v{version}";
             options.DefaultApiVersion = defaultVersion;
             options.SubstituteApiVersionInUrl = true;
             options.AssumeDefaultVersionWhenUnspecified = true;
