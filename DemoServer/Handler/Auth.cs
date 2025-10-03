@@ -33,11 +33,19 @@ public static class AuthHandler
             .WithApiVersionSet(Versions.SET_ALL_VERSIONS);
 
         router.MapGet("/methods", GetAuthMethods)
-            .WithDescription("Get the available authentication methods.")
+            .WithDescription("""
+                             Get the available authentication methods.<br/><br/>
+                             
+                             This call requires no authentication.
+                             """)
             .WithName("GetAuthMethodsV1.0+");
 
         router.MapPost("/", PerformAuth)
-            .WithDescription("Authenticate with the data source to get a token for further requests.")
+            .WithDescription("""
+                             Authenticate with the data source to get a token for further requests.<br/><br/>
+                             
+                             This call requires no authentication.
+                             """)
             .WithName("AuthenticateV1.0+");
     }
     
