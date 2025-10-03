@@ -27,7 +27,8 @@ public class AddGlobalVersionHeader : IDocumentFilter
                 In = ParameterLocation.Header,
                 Required = true,
                 Schema = new OpenApiSchema { Type = "string" },
-                Example = new OpenApiString(version),
+                Description = $"The API version to use. This must be set to '{version}'.",
+                Example = new OpenApiString(version)
             };
 
             // When the version header already exists, remove it first:
