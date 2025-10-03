@@ -1,11 +1,11 @@
-﻿using DemoServer.DataModel;
+﻿using v10 = DemoServer.DataModel.v10;
 
 namespace DemoServer.Handler;
 
 public static class Security
 {
     private const string TAG = "Security";
-    private static readonly SecurityRequirements SECURITY_REQUIREMENTS = new(ProviderType.ANY);
+    private static readonly v10.SecurityRequirements SECURITY_REQUIREMENTS = new(ProviderType.ANY);
 
     public static void AddSecurityHandlers(this IEndpointRouteBuilder app)
     {
@@ -18,5 +18,5 @@ public static class Security
             .WithName("GetSecurityRequirements");
     }
 
-    private static SecurityRequirements GetSecurityRequirements() => SECURITY_REQUIREMENTS;
+    private static v10.SecurityRequirements GetSecurityRequirements() => SECURITY_REQUIREMENTS;
 }

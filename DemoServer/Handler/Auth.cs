@@ -1,4 +1,4 @@
-﻿using DemoServer.DataModel;
+﻿using v10 = DemoServer.DataModel.v10;
 
 namespace DemoServer.Handler;
 
@@ -7,7 +7,7 @@ public static class AuthHandler
     private const string TAG = "Authentication";
     private static readonly HashSet<string> VALID_TOKENS = new();
     
-    private static readonly AuthScheme[] ALLOWED_AUTH_SCHEMES =
+    private static readonly v10.AuthScheme[] ALLOWED_AUTH_SCHEMES =
     [
         new()
         {
@@ -46,7 +46,7 @@ public static class AuthHandler
         app.Use(EnsureAuth);
     }
 
-    private static IEnumerable<AuthScheme> GetAuthMethods() => ALLOWED_AUTH_SCHEMES;
+    private static v10.AuthScheme[] GetAuthMethods() => ALLOWED_AUTH_SCHEMES;
 
     private static async Task EnsureAuth(HttpContext context, RequestDelegate next)
     {
@@ -89,7 +89,7 @@ public static class AuthHandler
         await next(context);
     }
 
-    private static AuthResponse PerformAuth(HttpContext context, AuthMethod authMethod)
+    private static v10.AuthResponse PerformAuth(HttpContext context, AuthMethod authMethod)
     {
         //
         // Authenticate with the data source to get a token for further requests.
@@ -105,23 +105,23 @@ public static class AuthHandler
                 // We don't need to authenticate (part 1 of the process), so we return a token:
                 var token = Guid.NewGuid().ToString();
                 VALID_TOKENS.Add(token);
-                return new AuthResponse(true, token, null);
+                return new v10.AuthResponse(true, token, null);
         
             case AuthMethod.USERNAME_PASSWORD:
                 // Check if the username and password are present (part 1 of the process):
                 if (!context.Request.Headers.TryGetValue("user", out var username) || !context.Request.Headers.TryGetValue("password", out var password))
-                    return new AuthResponse(false, null, "Username and password are required.");
+                    return new v10.AuthResponse(false, null, "Username and password are required.");
 
                 // Check a dummy user:
                 if (username != "user1" || password != "test")
-                    return new AuthResponse(false, null, "Invalid username and/or password.");
+                    return new v10.AuthResponse(false, null, "Invalid username and/or password.");
                 
                 // Return a token (part 2 of the process):
                 token = Guid.NewGuid().ToString();
                 VALID_TOKENS.Add(token);
-                return new AuthResponse(true, token, null);
+                return new v10.AuthResponse(true, token, null);
         }
     
-        return new AuthResponse(false, null, "Unknown authentication method.");
+        return new v10.AuthResponse(false, null, "Unknown authentication method.");
     }
 }

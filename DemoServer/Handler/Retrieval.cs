@@ -1,4 +1,4 @@
-﻿using DemoServer.DataModel;
+﻿using v10 = DemoServer.DataModel.v10;
 
 namespace DemoServer.Handler;
 
@@ -6,7 +6,7 @@ public static class Retrieval
 {
     private const string TAG = "Retrieval";
     
-    private static readonly RetrievalInfo[] RETRIEVAL_INFO = 
+    private static readonly v10.RetrievalInfo[] RETRIEVAL_INFO = 
     [
         new ()
         {
@@ -33,9 +33,9 @@ public static class Retrieval
             .WithName("Retrieve");
     }
 
-    private static RetrievalInfo[] GetRetrievalInfo() => RETRIEVAL_INFO;
+    private static v10.RetrievalInfo[] GetRetrievalInfo() => RETRIEVAL_INFO;
 
-    private static List<Context> Retrieve(RetrievalRequest request)
+    private static List<v10.Context> Retrieve(v10.RetrievalRequest request)
     {
         //
         // We use a simple demo retrieval process here, without any embedding.
@@ -43,7 +43,7 @@ public static class Retrieval
         // corresponding Wikipedia articles.
         //
     
-        var results = new List<Context>();
+        var results = new List<v10.Context>();
         foreach (var article in ExampleData.EXAMPLE_DATA)
         {
             // Find matches:
@@ -53,7 +53,7 @@ public static class Retrieval
             if(request.MaxMatches > 0 && results.Count >= request.MaxMatches)
                 break;
         
-            results.Add(new Context
+            results.Add(new v10.Context
             {
                 Name = article.Title,
                 Category = "Wikipedia Article",

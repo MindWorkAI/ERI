@@ -1,11 +1,11 @@
-﻿using DemoServer.DataModel;
+﻿using v10 = DemoServer.DataModel.v10;
 
 namespace DemoServer.Handler;
 
 public static class Embedding
 {
     private const string TAG = "Embedding";
-    private static readonly EmbeddingInfo[] EMBEDDING_INFO =
+    private static readonly v10.EmbeddingInfo[] EMBEDDING_INFO =
     [
         //
         // Just to demonstrate the usage of the EmbeddingInfo record.
@@ -35,5 +35,5 @@ public static class Embedding
             .WithName("GetEmbeddingInfo");
     }
 
-    private static EmbeddingInfo[] GetEmbeddingInfo() => EMBEDDING_INFO;
+    private static v10.EmbeddingInfo[] GetEmbeddingInfo() => EMBEDDING_INFO;
 }
