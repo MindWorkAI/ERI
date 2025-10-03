@@ -30,10 +30,14 @@ public static class Embedding
             .WithTags(TAG)
             .WithApiVersionSet(Versions.SET_ALL_VERSIONS);
 
-        router.MapGet("/info", GetEmbeddingInfo)
+        router.MapGet("/info", GetEmbeddingInfoV10)
             .WithDescription("Get information about the used embedding(s).")
             .WithName("GetEmbeddingInfo");
     }
 
-    private static v10.EmbeddingInfo[] GetEmbeddingInfo() => EMBEDDING_INFO;
+    /// <summary>
+    /// Get information about the embedding(s) used by this data source.
+    /// </summary>
+    /// <returns>Information about the embedding(s) used by this data source.</returns>
+    private static v10.EmbeddingInfo[] GetEmbeddingInfoV10() => EMBEDDING_INFO;
 }

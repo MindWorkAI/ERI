@@ -13,10 +13,14 @@ public static class DataSource
             .WithTags(TAG)
             .WithApiVersionSet(Versions.SET_ALL_VERSIONS);
 
-        router.MapGet("/", GetDataSourceInfo)
+        router.MapGet("/", GetDataSourceInfoV10)
             .WithDescription("Get information about the data source.")
             .WithName("GetDataSourceInfo");
     }
 
-    private static v10.DataSourceInfo GetDataSourceInfo() => DATA_SOURCE_INFO;
+    /// <summary>
+    /// Get the data source information for this ERI server.
+    /// </summary>
+    /// <returns>The data source information.</returns>
+    private static v10.DataSourceInfo GetDataSourceInfoV10() => DATA_SOURCE_INFO;
 }

@@ -34,19 +34,65 @@ public static class AuthHandler
 
         router.MapGet("/methods", GetAuthMethods)
             .WithDescription("Get the available authentication methods.")
-            .WithName("GetAuthMethods");
+            .WithName("GetAuthMethodsV1.0+");
 
         router.MapPost("/", PerformAuth)
             .WithDescription("Authenticate with the data source to get a token for further requests.")
-            .WithName("Authenticate");
+            .WithName("AuthenticateV1.0+");
+    }
+    
+    /// <summary>
+    /// Get the available authentication methods.
+    /// </summary>
+    /// <returns>The available authentication methods.</returns>
+    private static v10.AuthScheme[] GetAuthMethods() => ALLOWED_AUTH_SCHEMES;
+
+    /// <summary>
+    /// Authenticate with the ERI server to get a token for further requests.
+    /// </summary>
+    /// <param name="context">The HTTP context.</param>
+    /// <param name="authMethod">The authentication method to use.</param>
+    /// <returns>The authentication response, including the token if authentication was successful.</returns>
+    private static v10.AuthResponse PerformAuth(HttpContext context, AuthMethod authMethod)
+    {
+        //
+        // Authenticate with the data source to get a token for further requests.
+        // 
+        // Please note that the authentication is a two-step process. (1) The
+        // client authenticates with the server by using the chosen authentication
+        // method. All methods returned by /auth/methods are valid. (2) The server
+        // then returns a token that the client can use for further requests.
+        //
+        switch (authMethod)
+        {
+            case AuthMethod.NONE:
+                // We don't need to authenticate (part 1 of the process), so we return a token:
+                var token = Guid.NewGuid().ToString();
+                VALID_TOKENS.Add(token);
+                return new v10.AuthResponse(true, token, null);
+        
+            case AuthMethod.USERNAME_PASSWORD:
+                // Check if the username and password are present (part 1 of the process):
+                if (!context.Request.Headers.TryGetValue("user", out var username) || !context.Request.Headers.TryGetValue("password", out var password))
+                    return new v10.AuthResponse(false, null, "Username and password are required.");
+
+                // Check a dummy user:
+                if (username != "user1" || password != "test")
+                    return new v10.AuthResponse(false, null, "Invalid username and/or password.");
+                
+                // Return a token (part 2 of the process):
+                token = Guid.NewGuid().ToString();
+                VALID_TOKENS.Add(token);
+                return new v10.AuthResponse(true, token, null);
+        }
+    
+        return new v10.AuthResponse(false, null, "Unknown authentication method.");
     }
 
     public static void AddAuthFilter(this WebApplication app)
     {
         app.Use(EnsureAuth);
     }
-
-    private static v10.AuthScheme[] GetAuthMethods() => ALLOWED_AUTH_SCHEMES;
 
     private static async Task EnsureAuth(HttpContext context, RequestDelegate next)
     {
@@ -87,41 +133,5 @@ public static class AuthHandler
     
         // Call the next delegate/middleware in the pipeline.
         await next(context);
-    }
-
-    private static v10.AuthResponse PerformAuth(HttpContext context, AuthMethod authMethod)
-    {
-        //
-        // Authenticate with the data source to get a token for further requests.
-        // 
-        // Please note that the authentication is a two-step process. (1) The
-        // client authenticates with the server by using the chosen authentication
-        // method. All methods returned by /auth/methods are valid. (2) The server
-        // then returns a token that the client can use for further requests.
-        //
-        switch (authMethod)
-        {
-            case AuthMethod.NONE:
-                // We don't need to authenticate (part 1 of the process), so we return a token:
-                var token = Guid.NewGuid().ToString();
-                VALID_TOKENS.Add(token);
-                return new v10.AuthResponse(true, token, null);
-        
-            case AuthMethod.USERNAME_PASSWORD:
-                // Check if the username and password are present (part 1 of the process):
-                if (!context.Request.Headers.TryGetValue("user", out var username) || !context.Request.Headers.TryGetValue("password", out var password))
-                    return new v10.AuthResponse(false, null, "Username and password are required.");
-
-                // Check a dummy user:
-                if (username != "user1" || password != "test")
-                    return new v10.AuthResponse(false, null, "Invalid username and/or password.");
-                
-                // Return a token (part 2 of the process):
-                token = Guid.NewGuid().ToString();
-                VALID_TOKENS.Add(token);
-                return new v10.AuthResponse(true, token, null);
-        }
-    
-        return new v10.AuthResponse(false, null, "Unknown authentication method.");
     }
 }
