@@ -22,7 +22,7 @@ public class ConfigureSwaggerGen(IApiVersionDescriptionProvider apiDescriptionPr
         {
             options.SwaggerDoc(apiVersion.GroupName, new OpenApiInfo
             {
-                Title = $"ERI - (E)xternal (R)etrieval (I)nterface ({apiVersion.ApiVersion})",
+                Title = $"ERI - (E)xternal (R)etrieval (I)nterface ⸺ {apiVersion.ApiVersion}",
                 Version = apiVersion.ApiVersion.ToString(),
                 Description = """
                               This API serves as a contract between LLM tools like AI Studio and any external data sources for RAG
