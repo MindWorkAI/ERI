@@ -33,8 +33,17 @@ public static class Retrieval
             .WithName("Retrieve");
     }
 
+    /// <summary>
+    /// Get information about the retrieval processes implemented by this data source.
+    /// </summary>
+    /// <returns>Information about the retrieval processes implemented by this data source.</returns>
     private static v10.RetrievalInfo[] GetRetrievalInfo() => RETRIEVAL_INFO;
 
+    /// <summary>
+    /// Retrieve information from the data source.
+    /// </summary>
+    /// <param name="request">The retrieval request.</param>
+    /// <returns>The retrieval results.</returns>
     private static List<v10.Context> Retrieve(v10.RetrievalRequest request)
     {
         //

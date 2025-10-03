@@ -18,5 +18,9 @@ public static class Security
             .WithName("GetSecurityRequirements");
     }
 
+    /// <summary>
+    /// Get the security requirements for this data source.
+    /// </summary>
+    /// <returns>The security requirements for this data source.</returns>
     private static v10.SecurityRequirements GetSecurityRequirements() => SECURITY_REQUIREMENTS;
 }
