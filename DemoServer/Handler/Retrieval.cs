@@ -1,4 +1,5 @@
 ﻿using v10 = DemoServer.DataModel.v10;
+using v11 = DemoServer.DataModel.v11;
 
 namespace DemoServer.Handler;
 
@@ -73,26 +74,6 @@ public static class Retrieval
     /// <returns>The retrieval results.</returns>
     private static List<v10.Context> RetrieveV10(v10.RetrievalRequest request)
     {
-        return RetrieveFromDataSource(request);
-    }
-    
-    /// <summary>
-    /// Retrieve information from the specified data source.
-    /// </summary>
-    /// <param name="dataSourceId">The data source ID from which to retrieve the information.</param>
-    /// <param name="request">The retrieval request.</param>
-    /// <returns>The retrieval results.</returns>
-    /// <exception cref="ArgumentOutOfRangeException">Thrown if the data source ID is unknown.</exception>
-    private static List<v10.Context> RetrieveV11(int dataSourceId, v10.RetrievalRequest request)
-    {
-        if(dataSourceId != 0)
-            throw new ArgumentOutOfRangeException(nameof(dataSourceId), "Invalid data source ID.");
-        
-        return RetrieveFromDataSource(request);
-    }
-
-    private static List<v10.Context> RetrieveFromDataSource(v10.RetrievalRequest request)
-    {
         //
         // We use a simple demo retrieval process here, without any embedding.
         // We're looking for matching keywords in the user prompt and return the
@@ -114,6 +95,50 @@ public static class Retrieval
                 Name = article.Title,
                 Category = "Wikipedia Article",
                 Path = article.Url,
+                Type = ContentType.TEXT,
+                MatchedContent = article.Url,
+                SurroundingContent = [],
+                Links = [],
+            });
+        }
+    
+        return results;
+    }
+    
+    /// <summary>
+    /// Retrieve information from the specified data source.
+    /// </summary>
+    /// <param name="dataSourceId">The data source ID from which to retrieve the information.</param>
+    /// <param name="request">The retrieval request.</param>
+    /// <returns>The retrieval results.</returns>
+    /// <exception cref="ArgumentOutOfRangeException">Thrown if the data source ID is unknown.</exception>
+    private static List<v11.Context> RetrieveV11(int dataSourceId, v10.RetrievalRequest request)
+    {
+        if(dataSourceId != 0)
+            throw new ArgumentOutOfRangeException(nameof(dataSourceId), "Invalid data source ID.");
+        
+        //
+        // We use a simple demo retrieval process here, without any embedding.
+        // We're looking for matching keywords in the user prompt and return the
+        // corresponding Wikipedia articles.
+        //
+    
+        var results = new List<v11.Context>();
+        foreach (var article in ExampleData.EXAMPLE_DATA)
+        {
+            // Find matches:
+            if(!request.LatestUserPrompt.Contains(article.Title, StringComparison.InvariantCultureIgnoreCase))
+                continue;
+        
+            if(request.MaxMatches > 0 && results.Count >= request.MaxMatches)
+                break;
+        
+            results.Add(new v11.Context
+            {
+                Name = article.Title,
+                Category = "Wikipedia Article",
+                Path = article.Url,
+                ConfidenceScore = 1f,
                 Type = ContentType.TEXT,
                 MatchedContent = article.Url,
                 SurroundingContent = [],
