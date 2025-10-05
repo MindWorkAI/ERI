@@ -1,4 +1,4 @@
-﻿namespace DemoServer.DataModel;
+﻿namespace DemoServer.DataModel.v10;
 
 /// <summary>
 /// Represents information about the used embedding for this data source. The purpose of this information is to give the

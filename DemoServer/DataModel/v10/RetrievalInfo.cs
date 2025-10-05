@@ -1,4 +1,4 @@
-﻿namespace DemoServer.DataModel;
+﻿namespace DemoServer.DataModel.v10;
 
 /// <summary>
 /// Information about a retrieval process, which this data source implements.

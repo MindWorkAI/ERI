@@ -1,4 +1,4 @@
-﻿namespace DemoServer.DataModel;
+﻿namespace DemoServer.DataModel.v10;
 
 /// <summary>
 /// A block of content of a chat thread.
