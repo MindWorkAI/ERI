@@ -1,9 +1,6 @@
-﻿using v10 = DemoServer.DataModel.v10;
-using v11 = DemoServer.DataModel.v11;
+﻿namespace DemoServer.Handler;
 
-namespace DemoServer.Handler;
-
-public static class Retrieval
+public static class RetrievalV1
 {
     private const string TAG = "Retrieval";
     
@@ -19,11 +16,11 @@ public static class Retrieval
         },
     ];
 
-    public static void AddRetrievalHandlers(this IEndpointRouteBuilder app)
+    public static void AddRetrievalV1Handlers(this IEndpointRouteBuilder app)
     {
         var router = app.MapGroup("/retrieval")
             .WithTags(TAG)
-            .WithApiVersionSet(Versions.SET_ALL_VERSIONS);
+            .WithApiVersionSet(Versions.SET_ALL_V1_ONLY);
 
         router.MapGet("/info", GetRetrievalInfoV10)
             .WithDescription("Get information about the retrieval processes implemented by this data source.")

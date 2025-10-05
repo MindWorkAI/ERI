@@ -1,7 +1,4 @@
-﻿using v10 = DemoServer.DataModel.v10;
-using v11 = DemoServer.DataModel.v11;
-
-namespace DemoServer.Handler;
+﻿namespace DemoServer.Handler;
 
 public static class Security
 {

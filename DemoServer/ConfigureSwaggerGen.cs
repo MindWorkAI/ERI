@@ -21,7 +21,7 @@ public class ConfigureSwaggerGen(IApiVersionDescriptionProvider apiDescriptionPr
         
         foreach (var apiVersion in apiDescriptionProvider.ApiVersionDescriptions)
         {
-            options.SwaggerDoc(apiVersion.GroupName, new OpenApiInfo
+            options.SwaggerDoc(apiVersion.GroupName, new()
             {
                 Title = $"ERI - (E)xternal (R)etrieval (I)nterface ⸺ {apiVersion.ApiVersion}",
                 Version = apiVersion.ApiVersion.ToString(),

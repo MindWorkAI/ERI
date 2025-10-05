@@ -1,6 +1,4 @@
-﻿using v10 = DemoServer.DataModel.v10;
-
-namespace DemoServer.Handler;
+﻿namespace DemoServer.Handler;
 
 public static class Embedding
 {

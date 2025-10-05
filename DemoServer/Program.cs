@@ -12,7 +12,9 @@ app.AddServerHandlers();
 app.AddAuthHandlers();
 app.AddSecurityHandlers();
 app.AddEmbeddingHandlers();
-app.AddRetrievalHandlers();
+app.AddRetrievalV1Handlers();
+app.AddRetrievalV2Handlers();
+app.AddToolHandlers();
 app.AddDataSourceHandlers();
 
 app.AddAuthFilter();

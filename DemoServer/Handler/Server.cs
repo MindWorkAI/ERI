@@ -1,5 +1,3 @@
-using v11 = DemoServer.DataModel.v11;
-
 namespace DemoServer.Handler;
 
 public static class Server
