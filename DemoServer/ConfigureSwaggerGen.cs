@@ -11,10 +11,11 @@ namespace DemoServer;
 
 public class ConfigureSwaggerGen(IApiVersionDescriptionProvider apiDescriptionProvider) : IConfigureNamedOptions<SwaggerGenOptions>
 {
+    internal static readonly string XML_DOCUMENTATION_FILE = Path.Combine(AppContext.BaseDirectory, $"{Assembly.GetExecutingAssembly().GetName().Name}.xml");
+
     public void Configure(SwaggerGenOptions options)
     {
-        var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
-        options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
+        options.IncludeXmlComments(XML_DOCUMENTATION_FILE);
         options.SchemaFilter<EnumSchemaFilter>();
         options.DocumentFilter<AddGlobalVersionHeader>();
         
