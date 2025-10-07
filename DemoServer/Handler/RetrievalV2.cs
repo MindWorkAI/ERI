@@ -272,6 +272,7 @@ public static class RetrievalV2
             State = RetrievalResultState.RESULTS_READY,
             Contexts = [ result ],
             ConclusiveAnswer = null,
+            Citations = result.Path is null ? [] : [ new(result.Name, result.Path) ],
             
             // Indicate whether more results are available:
             MoreResultsAvailable = results.Count > 0,
