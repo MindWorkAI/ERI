@@ -54,7 +54,7 @@ public static class AuthHandler
     /// Get the available authentication methods.
     /// </summary>
     /// <returns>The available authentication methods.</returns>
-    private static v10.AuthScheme[] GetAuthMethods() => ALLOWED_AUTH_SCHEMES;
+    internal static v10.AuthScheme[] GetAuthMethods() => ALLOWED_AUTH_SCHEMES;
 
     /// <summary>
     /// Authenticate with the ERI server to get a token for further requests.
@@ -62,7 +62,7 @@ public static class AuthHandler
     /// <param name="context">The HTTP context.</param>
     /// <param name="authMethod">The authentication method to use.</param>
     /// <returns>The authentication response, including the token if authentication was successful.</returns>
-    private static v10.AuthResponse PerformAuth(HttpContext context, AuthMethod authMethod)
+    internal static v10.AuthResponse PerformAuth(HttpContext context, AuthMethod authMethod)
     {
         //
         // Authenticate with the data source to get a token for further requests.

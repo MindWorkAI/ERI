@@ -51,7 +51,7 @@ public static class RetrievalV1
     /// Get information about the retrieval processes implemented by this data source.
     /// </summary>
     /// <returns>Information about the retrieval processes implemented by this data source.</returns>
-    private static v10.RetrievalInfo[] GetRetrievalInfoV10() => RETRIEVAL_INFO;
+    internal static v10.RetrievalInfo[] GetRetrievalInfoV10() => RETRIEVAL_INFO;
     
     /// <summary>
     /// Get information about the retrieval processes implemented by the specified data source.
@@ -59,7 +59,7 @@ public static class RetrievalV1
     /// <param name="dataSourceId">The data source ID for which to get the retrieval information.</param>
     /// <returns>Information about the retrieval processes implemented by the specified data source.</returns>
     /// <exception cref="ArgumentOutOfRangeException">Thrown if the data source ID is unknown.</exception>
-    private static v10.RetrievalInfo[] GetRetrievalInfoV11(int dataSourceId)
+    internal static v10.RetrievalInfo[] GetRetrievalInfoV11(int dataSourceId)
     {
         if(dataSourceId != 0)
             throw new ArgumentOutOfRangeException(nameof(dataSourceId), "Invalid data source ID.");
@@ -72,7 +72,7 @@ public static class RetrievalV1
     /// </summary>
     /// <param name="request">The retrieval request.</param>
     /// <returns>The retrieval results.</returns>
-    private static List<v10.Context> RetrieveV10(v10.RetrievalRequest request)
+    internal static List<v10.Context> RetrieveV10(v10.RetrievalRequest request)
     {
         //
         // We use a simple demo retrieval process here, without any embedding.
@@ -112,7 +112,7 @@ public static class RetrievalV1
     /// <param name="request">The retrieval request.</param>
     /// <returns>The retrieval results.</returns>
     /// <exception cref="ArgumentOutOfRangeException">Thrown if the data source ID is unknown.</exception>
-    private static List<v11.Context> RetrieveV11(int dataSourceId, v10.RetrievalRequest request)
+    internal static List<v11.Context> RetrieveV11(int dataSourceId, v10.RetrievalRequest request)
     {
         if(dataSourceId != 0)
             throw new ArgumentOutOfRangeException(nameof(dataSourceId), "Invalid data source ID.");

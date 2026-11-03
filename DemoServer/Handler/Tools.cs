@@ -28,7 +28,7 @@ public static class Tools
     /// Get a list of available tools for this ERI server.
     /// </summary>
     /// <returns>A list of available tools.</returns>
-    private static v20.ToolInfo[] GetToolListV20() => [];
+    internal static v20.ToolInfo[] GetToolListV20() => [];
     
     /// <summary>
     /// Execute the specified tool with the given input.
@@ -36,7 +36,7 @@ public static class Tools
     /// <param name="toolId">The tool ID to execute.</param>
     /// <param name="input">The input for the tool.</param>
     /// <returns>The output of the tool execution.</returns>
-    private static string ExecuteToolV20(Guid toolId, [FromBody] string input)
+    internal static string ExecuteToolV20(Guid toolId, [FromBody] string input)
     {
         return string.Empty;
     }

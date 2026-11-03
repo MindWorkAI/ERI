@@ -50,11 +50,11 @@ public static class Security
     /// Get the security requirements for this data source.
     /// </summary>
     /// <returns>The security requirements for this data source.</returns>
-    private static v10.SecurityRequirements GetSecurityRequirementsV10() => SECURITY_REQUIREMENTS_V10;
+    internal static v10.SecurityRequirements GetSecurityRequirementsV10() => SECURITY_REQUIREMENTS_V10;
     
     /// <summary>
     /// Get the security requirements for this ERI server.
     /// </summary>
     /// <returns>The security requirements for this ERI server.</returns>
-    private static v11.SecurityRequirements GetSecurityRequirementsV11() => SECURITY_REQUIREMENTS_V11;
+    internal static v11.SecurityRequirements GetSecurityRequirementsV11() => SECURITY_REQUIREMENTS_V11;
 }

@@ -35,5 +35,5 @@ public static class Server
     /// Get information about the ERI server.
     /// </summary>
     /// <returns>Information about the ERI server.</returns>
-    private static v11.ServerInfo GetServerInfoV11() => SERVER_INFO;
+    internal static v11.ServerInfo GetServerInfoV11() => SERVER_INFO;
 }

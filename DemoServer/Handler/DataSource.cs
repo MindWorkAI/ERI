@@ -36,7 +36,7 @@ public static class DataSource
     /// Get the data source information for this ERI server.
     /// </summary>
     /// <returns>The data source information.</returns>
-    private static v10.DataSourceInfo GetDataSourceInfoV10() => DATA_SOURCE_INFO;
+    internal static v10.DataSourceInfo GetDataSourceInfoV10() => DATA_SOURCE_INFO;
     
     /// <summary>
     /// Get the data source information for the given data source ID.
@@ -44,7 +44,7 @@ public static class DataSource
     /// <param name="dataSourceId">The data source ID for which to get the information.</param>
     /// <returns>The data source information.</returns>
     /// <exception cref="ArgumentOutOfRangeException">Thrown if the data source ID is unknown.</exception>
-    private static v10.DataSourceInfo GetDataSourceInfoV11(int dataSourceId)
+    internal static v10.DataSourceInfo GetDataSourceInfoV11(int dataSourceId)
     {
         if(dataSourceId != 0)
             throw new ArgumentOutOfRangeException(nameof(dataSourceId), "Invalid data source ID.");
@@ -56,5 +56,5 @@ public static class DataSource
     /// Get a list of available data sources for this ERI server.
     /// </summary>
     /// <returns>A list of available data sources.</returns>
-    private static v11.DataSourceList[] GetDataSourceList() => [ new(0, "DEMO: Wikipedia Links") ];
+    internal static v11.DataSourceList[] GetDataSourceList() => [ new(0, "DEMO: Wikipedia Links") ];
 }

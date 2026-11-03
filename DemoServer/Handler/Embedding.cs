@@ -47,7 +47,7 @@ public static class Embedding
     /// Get information about the embedding(s) used by this data source.
     /// </summary>
     /// <returns>Information about the embedding(s) used by this data source.</returns>
-    private static v10.EmbeddingInfo[] GetEmbeddingInfoV10() => EMBEDDING_INFO;
+    internal static v10.EmbeddingInfo[] GetEmbeddingInfoV10() => EMBEDDING_INFO;
     
     /// <summary>
     /// Get information about the embedding(s) used by the specified data source.
@@ -55,7 +55,7 @@ public static class Embedding
     /// <param name="dataSourceId">The data source ID for which to get the embedding information.</param>
     /// <returns>Information about the embedding(s) used by the specified data source.</returns>
     /// <exception cref="ArgumentOutOfRangeException">Thrown if the data source ID is unknown.</exception>
-    private static v10.EmbeddingInfo[] GetEmbeddingInfoV11(int dataSourceId)
+    internal static v10.EmbeddingInfo[] GetEmbeddingInfoV11(int dataSourceId)
     {
         if(dataSourceId != 0)
             throw new ArgumentOutOfRangeException(nameof(dataSourceId), "Invalid data source ID.");

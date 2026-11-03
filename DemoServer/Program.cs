@@ -2,9 +2,8 @@ using DemoServer.Handler;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.ConfigureHttpJsonOptions(Json.Configure);
-builder.Services.AddSwaggerGen();
 builder.Services.AddAPIVersioning();
-builder.Services.ConfigureOptions<ConfigureSwaggerGen>();
+builder.Services.AddOpenApiDocuments();
 
 var app = builder.Build();
 app.AddServerHandlers();
@@ -17,6 +16,6 @@ app.AddToolHandlers();
 app.AddDataSourceHandlers();
 
 app.AddAuthFilter();
-app.MapSwagger("/specification/{documentName}.json");
+app.MapOpenApiDocuments();
 app.UseSwaggerUI(options => options.Configure(app.DescribeApiVersions()));
 app.Run();
