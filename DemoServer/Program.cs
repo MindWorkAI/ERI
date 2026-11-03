@@ -2,7 +2,6 @@ using DemoServer.Handler;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.ConfigureHttpJsonOptions(Json.Configure);
-builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddAPIVersioning();
 builder.Services.ConfigureOptions<ConfigureSwaggerGen>();
