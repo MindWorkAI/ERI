@@ -24,27 +24,30 @@ public static class AuthHandler
         },
     ];
 
-    public static void AddAuthHandlers(this IEndpointRouteBuilder app)
+    extension(IEndpointRouteBuilder app)
     {
-        var router = app.MapGroup("/auth")
-            .WithTags(TAG)
-            .WithApiVersionSet(Versions.SET_ALL_VERSIONS);
+        public void AddAuthHandlers()
+        {
+            var router = app.MapGroup("/auth")
+                .WithTags(TAG)
+                .WithApiVersionSet(Versions.SET_ALL_VERSIONS);
 
-        router.MapGet("/methods", GetAuthMethods)
-            .WithDescription("""
-                             Get the available authentication methods.<br/><br/>
-                             
-                             This call requires no authentication.
-                             """)
-            .WithName("GetAuthMethodsV1.0+");
+            router.MapGet("/methods", GetAuthMethods)
+                .WithDescription("""
+                                 Get the available authentication methods.<br/><br/>
+                                 
+                                 This call requires no authentication.
+                                 """)
+                .WithName("GetAuthMethodsV1.0+");
 
-        router.MapPost("/", PerformAuth)
-            .WithDescription("""
-                             Authenticate with the data source to get a token for further requests.<br/><br/>
-                             
-                             This call requires no authentication.
-                             """)
-            .WithName("AuthenticateV1.0+");
+            router.MapPost("/", PerformAuth)
+                .WithDescription("""
+                                 Authenticate with the data source to get a token for further requests.<br/><br/>
+                                 
+                                 This call requires no authentication.
+                                 """)
+                .WithName("AuthenticateV1.0+");
+        }
     }
     
     /// <summary>
@@ -95,9 +98,12 @@ public static class AuthHandler
         return new v10.AuthResponse(false, null, "Unknown authentication method.");
     }
 
-    public static void AddAuthFilter(this WebApplication app)
+    extension(WebApplication app)
     {
-        app.Use(EnsureAuth);
+        public void AddAuthFilter()
+        {
+            app.Use(EnsureAuth);
+        }
     }
 
     private static async Task EnsureAuth(HttpContext context, RequestDelegate next)

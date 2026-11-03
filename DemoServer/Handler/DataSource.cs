@@ -5,28 +5,31 @@ public static class DataSource
     private const string TAG = "Data Source";
     private static readonly v10.DataSourceInfo DATA_SOURCE_INFO = new("DEMO: Wikipedia Links", "Contains some links to Wikipedia articles.");
 
-    public static void AddDataSourceHandlers(this IEndpointRouteBuilder app)
+    extension(IEndpointRouteBuilder app)
     {
-        var router = app.MapGroup("/dataSource")
-            .WithTags(TAG)
-            .WithApiVersionSet(Versions.SET_ALL_VERSIONS);
+        public void AddDataSourceHandlers()
+        {
+            var router = app.MapGroup("/dataSource")
+                .WithTags(TAG)
+                .WithApiVersionSet(Versions.SET_ALL_VERSIONS);
 
-        router.MapGet("/", GetDataSourceInfoV10)
-            .WithDescription("Get information about the data source.")
-            .WithName("GetDataSourceInfoV1.0")
-            .MapToApiVersion(Versions.V1_0);
-        
-        router.MapGet("/", GetDataSourceInfoV11)
-            .WithDescription("Get information about a data source.")
-            .WithName("GetDataSourceInfoV1.1+")
-            .MapToApiVersion(Versions.V1_1)
-            .MapToApiVersion(Versions.V2_0);
+            router.MapGet("/", GetDataSourceInfoV10)
+                .WithDescription("Get information about the data source.")
+                .WithName("GetDataSourceInfoV1.0")
+                .MapToApiVersion(Versions.V1_0);
+            
+            router.MapGet("/", GetDataSourceInfoV11)
+                .WithDescription("Get information about a data source.")
+                .WithName("GetDataSourceInfoV1.1+")
+                .MapToApiVersion(Versions.V1_1)
+                .MapToApiVersion(Versions.V2_0);
 
-        router.MapGet("/list", GetDataSourceList)
-            .WithDescription("Get a list of available data sources.")
-            .WithName("GetDataSourceListV1.1+")
-            .MapToApiVersion(Versions.V1_1)
-            .MapToApiVersion(Versions.V2_0);
+            router.MapGet("/list", GetDataSourceList)
+                .WithDescription("Get a list of available data sources.")
+                .WithName("GetDataSourceListV1.1+")
+                .MapToApiVersion(Versions.V1_1)
+                .MapToApiVersion(Versions.V2_0);
+        }
     }
 
     /// <summary>

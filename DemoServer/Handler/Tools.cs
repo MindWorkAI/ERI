@@ -6,19 +6,22 @@ public static class Tools
 {
     private const string TAG = "Tools";
 
-    public static void AddToolHandlers(this IEndpointRouteBuilder app)
+    extension(IEndpointRouteBuilder app)
     {
-        var router = app.MapGroup("/tools")
-            .WithTags(TAG)
-            .WithApiVersionSet(Versions.SET_V2_0_AND_ABOVE);
+        public void AddToolHandlers()
+        {
+            var router = app.MapGroup("/tools")
+                .WithTags(TAG)
+                .WithApiVersionSet(Versions.SET_V2_0_AND_ABOVE);
 
-        router.MapGet("/list", GetToolListV20)
-            .WithDescription("Get a list of available tools for this ERI server.")
-            .WithName("GetToolListV2.0+");
-        
-        router.MapPost("/execute", ExecuteToolV20)
-            .WithDescription("Execute the specified tool with the given input.")
-            .WithName("ExecuteToolV2.0+");
+            router.MapGet("/list", GetToolListV20)
+                .WithDescription("Get a list of available tools for this ERI server.")
+                .WithName("GetToolListV2.0+");
+            
+            router.MapPost("/execute", ExecuteToolV20)
+                .WithDescription("Execute the specified tool with the given input.")
+                .WithName("ExecuteToolV2.0+");
+        }
     }
     
     /// <summary>

@@ -22,22 +22,25 @@ public static class Embedding
         },
     ];
     
-    public static void AddEmbeddingHandlers(this IEndpointRouteBuilder app)
+    extension(IEndpointRouteBuilder app)
     {
-        var router = app.MapGroup("/embedding")
-            .WithTags(TAG)
-            .WithApiVersionSet(Versions.SET_ALL_VERSIONS);
+        public void AddEmbeddingHandlers()
+        {
+            var router = app.MapGroup("/embedding")
+                .WithTags(TAG)
+                .WithApiVersionSet(Versions.SET_ALL_VERSIONS);
 
-        router.MapGet("/info", GetEmbeddingInfoV10)
-            .WithDescription("Get information about the used embedding(s).")
-            .WithName("GetEmbeddingInfoV1.0")
-            .MapToApiVersion(Versions.V1_0);
-        
-        router.MapGet("/info", GetEmbeddingInfoV11)
-            .WithDescription("Get information about the embedding(s) used by a specific data source.")
-            .WithName("GetEmbeddingInfoV1.1+")
-            .MapToApiVersion(Versions.V1_1)
-            .MapToApiVersion(Versions.V2_0);
+            router.MapGet("/info", GetEmbeddingInfoV10)
+                .WithDescription("Get information about the used embedding(s).")
+                .WithName("GetEmbeddingInfoV1.0")
+                .MapToApiVersion(Versions.V1_0);
+            
+            router.MapGet("/info", GetEmbeddingInfoV11)
+                .WithDescription("Get information about the embedding(s) used by a specific data source.")
+                .WithName("GetEmbeddingInfoV1.1+")
+                .MapToApiVersion(Versions.V1_1)
+                .MapToApiVersion(Versions.V2_0);
+        }
     }
 
     /// <summary>

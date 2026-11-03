@@ -23,50 +23,53 @@ public static class RetrievalV2
         },
     ];
 
-    public static void AddRetrievalV2Handlers(this IEndpointRouteBuilder app)
+    extension(IEndpointRouteBuilder app)
     {
-        var router = app.MapGroup("/retrieval")
-            .WithTags(TAG)
-            .WithApiVersionSet(Versions.SET_V2_0_AND_ABOVE);
+        public void AddRetrievalV2Handlers()
+        {
+            var router = app.MapGroup("/retrieval")
+                .WithTags(TAG)
+                .WithApiVersionSet(Versions.SET_V2_0_AND_ABOVE);
 
-        router.MapGet("/info", GetRetrievalInfoV20)
-            .WithDescription("Get information about the retrieval processes implemented by this data source.")
-            .WithName("GetRetrievalInfoV20");
+            router.MapGet("/info", GetRetrievalInfoV20)
+                .WithDescription("Get information about the retrieval processes implemented by this data source.")
+                .WithName("GetRetrievalInfoV20");
 
-        router.MapPut("/announce", AnnounceRetrievalV20)
-            .WithDescription("Announce a new retrieval session for the specified data source.")
-            .WithName("AnnounceRetrievalV20");
+            router.MapPut("/announce", AnnounceRetrievalV20)
+                .WithDescription("Announce a new retrieval session for the specified data source.")
+                .WithName("AnnounceRetrievalV20");
 
-        router.MapGet("/state", GetRetrievalStateV20)
-            .WithDescription("Get the current state of the specified retrieval session.")
-            .WithName("GetRetrievalStateV20");
+            router.MapGet("/state", GetRetrievalStateV20)
+                .WithDescription("Get the current state of the specified retrieval session.")
+                .WithName("GetRetrievalStateV20");
 
-        router.MapPost("/processStep", QueryProcessStepV20)
-            .WithDescription("""
-                             Query the next step in the retrieval process for a given session ID. This is used
-                             to allow for retrieval processes that require client-side actions, e.g.,
-                             use the user's LLM to perform a task.
-                             """)
-            .WithName("QueryProcessStepV20");
+            router.MapPost("/processStep", QueryProcessStepV20)
+                .WithDescription("""
+                                 Query the next step in the retrieval process for a given session ID. This is used
+                                 to allow for retrieval processes that require client-side actions, e.g.,
+                                 use the user's LLM to perform a task.
+                                 """)
+                .WithName("QueryProcessStepV20");
 
-        router.MapGet("/results", GetResultsV20)
-            .WithDescription("""
-                             Get the retrieval results for the specified session ID. You might need to call this
-                             method multiple times to get all results, depending on the number of results and
-                             the maximum number of results returned per call.
-                             """)
-            .WithName("GetResultsV20");
-        
-        router.MapPost("/chatCompletion", ChatCompletionV20)
-            .WithDescription("""
-                             Get a chat completion from the ERI server's LLM provider, based on the provided messages.
-                             The response is a stream of SSE (Server-Sent Events) messages. This API is compatible
-                             with the OpenAI chat completion API. Differences are: (1) Only a list of messages
-                             is accepted as input. Other parameters, like model name, temperature, etc., are
-                             not supported. (2) The response data structure might be a subset of the OpenAI
-                             response data structure.
-                             """)
-            .WithName("ChatCompletionV20");
+            router.MapGet("/results", GetResultsV20)
+                .WithDescription("""
+                                 Get the retrieval results for the specified session ID. You might need to call this
+                                 method multiple times to get all results, depending on the number of results and
+                                 the maximum number of results returned per call.
+                                 """)
+                .WithName("GetResultsV20");
+            
+            router.MapPost("/chatCompletion", ChatCompletionV20)
+                .WithDescription("""
+                                 Get a chat completion from the ERI server's LLM provider, based on the provided messages.
+                                 The response is a stream of SSE (Server-Sent Events) messages. This API is compatible
+                                 with the OpenAI chat completion API. Differences are: (1) Only a list of messages
+                                 is accepted as input. Other parameters, like model name, temperature, etc., are
+                                 not supported. (2) The response data structure might be a subset of the OpenAI
+                                 response data structure.
+                                 """)
+                .WithName("ChatCompletionV20");
+        }
     }
     
     /// <summary>
