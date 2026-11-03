@@ -1,33 +1,30 @@
 ﻿using System.Reflection;
 using System.Text;
+using System.Text.Json.Nodes;
 using System.Xml.Linq;
 
-using Microsoft.OpenApi.Any;
-using Microsoft.OpenApi.Models;
-
-using Swashbuckle.AspNetCore.SwaggerGen;
+using Microsoft.AspNetCore.OpenApi;
+using Microsoft.OpenApi;
 
 namespace DemoServer;
 
-public sealed class EnumSchemaFilter : ISchemaFilter
+public sealed class EnumSchemaTransformer : IOpenApiSchemaTransformer
 {
-    public void Apply(OpenApiSchema model, SchemaFilterContext context)
+    private static readonly string XML_DOCUMENTATION_FILE = Path.Combine(AppContext.BaseDirectory, $"{Assembly.GetExecutingAssembly().GetName().Name}.xml");
+
+    public Task TransformAsync(OpenApiSchema schema, OpenApiSchemaTransformerContext context, CancellationToken cancellationToken)
     {
-        if (context.Type.IsEnum)
-        {
-            model.Enum.Clear();
-            Enum.GetNames(context.Type)
-                .ToList()
-                .ForEach(n =>
-                {
-                    model.Enum.Add(new OpenApiString(n)); 
-                    model.Type = "string";
-                    model.Format = null;
-                    model.Description = BuildDescription(context.Type.GetTypeInfo());
-                });
-        }
+        var type = context.JsonTypeInfo.Type;
+        if (!type.IsEnum)
+            return Task.CompletedTask;
+
+        schema.Enum = [..Enum.GetNames(type).Select(JsonNode (name) => JsonValue.Create(name))];
+        schema.Type = JsonSchemaType.String;
+        schema.Format = null;
+        schema.Description = BuildDescription(type.GetTypeInfo());
+        return Task.CompletedTask;
     }
-    
+
     private static string BuildDescription(TypeInfo typeInfo)
     {
         var docMembers = LoadXmlMembers();
@@ -69,7 +66,7 @@ public sealed class EnumSchemaFilter : ISchemaFilter
 
     private static XElement? LoadXmlMembers()
     {
-        var file = ConfigureSwaggerGen.XML_DOCUMENTATION_FILE;
+        var file = XML_DOCUMENTATION_FILE;
         var docXml = XDocument.Load(file);
         var xmlRoot = docXml.Root;
 

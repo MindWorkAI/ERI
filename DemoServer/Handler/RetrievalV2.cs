@@ -23,50 +23,53 @@ public static class RetrievalV2
         },
     ];
 
-    public static void AddRetrievalV2Handlers(this IEndpointRouteBuilder app)
+    extension(IEndpointRouteBuilder app)
     {
-        var router = app.MapGroup("/retrieval")
-            .WithTags(TAG)
-            .WithApiVersionSet(Versions.SET_V2_0_AND_ABOVE);
+        public void AddRetrievalV2Handlers()
+        {
+            var router = app.MapGroup("/retrieval")
+                .WithTags(TAG)
+                .WithApiVersionSet(Versions.SET_V2_0_AND_ABOVE);
 
-        router.MapGet("/info", GetRetrievalInfoV20)
-            .WithDescription("Get information about the retrieval processes implemented by this data source.")
-            .WithName("GetRetrievalInfoV20");
+            router.MapGet("/info", GetRetrievalInfoV20)
+                .WithDescription("Get information about the retrieval processes implemented by this data source.")
+                .WithName("GetRetrievalInfoV20");
 
-        router.MapPut("/announce", AnnounceRetrievalV20)
-            .WithDescription("Announce a new retrieval session for the specified data source.")
-            .WithName("AnnounceRetrievalV20");
+            router.MapPut("/announce", AnnounceRetrievalV20)
+                .WithDescription("Announce a new retrieval session for the specified data source.")
+                .WithName("AnnounceRetrievalV20");
 
-        router.MapGet("/state", GetRetrievalStateV20)
-            .WithDescription("Get the current state of the specified retrieval session.")
-            .WithName("GetRetrievalStateV20");
+            router.MapGet("/state", GetRetrievalStateV20)
+                .WithDescription("Get the current state of the specified retrieval session.")
+                .WithName("GetRetrievalStateV20");
 
-        router.MapPost("/processStep", QueryProcessStepV20)
-            .WithDescription("""
-                             Query the next step in the retrieval process for a given session ID. This is used
-                             to allow for retrieval processes that require client-side actions, e.g.,
-                             use the user's LLM to perform a task.
-                             """)
-            .WithName("QueryProcessStepV20");
+            router.MapPost("/processStep", QueryProcessStepV20)
+                .WithDescription("""
+                                 Query the next step in the retrieval process for a given session ID. This is used
+                                 to allow for retrieval processes that require client-side actions, e.g.,
+                                 use the user's LLM to perform a task.
+                                 """)
+                .WithName("QueryProcessStepV20");
 
-        router.MapGet("/results", GetResultsV20)
-            .WithDescription("""
-                             Get the retrieval results for the specified session ID. You might need to call this
-                             method multiple times to get all results, depending on the number of results and
-                             the maximum number of results returned per call.
-                             """)
-            .WithName("GetResultsV20");
-        
-        router.MapPost("/chatCompletion", ChatCompletionV20)
-            .WithDescription("""
-                             Get a chat completion from the ERI server's LLM provider, based on the provided messages.
-                             The response is a stream of SSE (Server-Sent Events) messages. This API is compatible
-                             with the OpenAI chat completion API. Differences are: (1) Only a list of messages
-                             is accepted as input. Other parameters, like model name, temperature, etc., are
-                             not supported. (2) The response data structure might be a subset of the OpenAI
-                             response data structure.
-                             """)
-            .WithName("ChatCompletionV20");
+            router.MapGet("/results", GetResultsV20)
+                .WithDescription("""
+                                 Get the retrieval results for the specified session ID. You might need to call this
+                                 method multiple times to get all results, depending on the number of results and
+                                 the maximum number of results returned per call.
+                                 """)
+                .WithName("GetResultsV20");
+            
+            router.MapPost("/chatCompletion", ChatCompletionV20)
+                .WithDescription("""
+                                 Get a chat completion from the ERI server's LLM provider, based on the provided messages.
+                                 The response is a stream of SSE (Server-Sent Events) messages. This API is compatible
+                                 with the OpenAI chat completion API. Differences are: (1) Only a list of messages
+                                 is accepted as input. Other parameters, like model name, temperature, etc., are
+                                 not supported. (2) The response data structure might be a subset of the OpenAI
+                                 response data structure.
+                                 """)
+                .WithName("ChatCompletionV20");
+        }
     }
     
     /// <summary>
@@ -75,7 +78,7 @@ public static class RetrievalV2
     /// <param name="dataSourceId">The data source ID for which to get the retrieval information.</param>
     /// <returns>Information about the retrieval processes implemented by the specified data source.</returns>
     /// <exception cref="ArgumentOutOfRangeException">Thrown if the data source ID is unknown.</exception>
-    private static v20.RetrievalInfo[] GetRetrievalInfoV20(int dataSourceId)
+    internal static v20.RetrievalInfo[] GetRetrievalInfoV20(int dataSourceId)
     {
         if(dataSourceId != 0)
             throw new ArgumentOutOfRangeException(nameof(dataSourceId), "Invalid data source ID.");
@@ -90,7 +93,7 @@ public static class RetrievalV2
     /// <param name="request">The retrieval request.</param>
     /// <returns>The ID of the created retrieval session.</returns>
     /// <exception cref="ArgumentOutOfRangeException">Thrown if the data source ID is unknown.</exception>
-    private static Guid AnnounceRetrievalV20(int dataSourceId, v10.RetrievalRequest request)
+    internal static Guid AnnounceRetrievalV20(int dataSourceId, v10.RetrievalRequest request)
     {
         if(dataSourceId != 0)
             throw new ArgumentOutOfRangeException(nameof(dataSourceId), "Invalid data source ID.");
@@ -190,7 +193,7 @@ public static class RetrievalV2
     /// <param name="sessionId">The ID of the retrieval session. You get this ID when announcing the session.</param>
     /// <returns>The current state of the retrieval session.</returns>
     /// <exception cref="ArgumentOutOfRangeException">Thrown when the session ID is unknown.</exception>
-    private static v20.RetrievalStatus GetRetrievalStateV20(Guid sessionId)
+    internal static v20.RetrievalStatus GetRetrievalStateV20(Guid sessionId)
     {
         if(!SESSIONS.TryGetValue(sessionId, out var session))
             throw new ArgumentOutOfRangeException(nameof(sessionId), "Invalid session ID.");
@@ -206,7 +209,7 @@ public static class RetrievalV2
     /// <returns>The next step in the retrieval process. Depending on the retrieval process,
     /// a client-side action may be required.</returns>
     /// <exception cref="ArgumentOutOfRangeException">Thrown if the provided session ID is invalid or does not exist.</exception>
-    private static v20.RetrievalProcessStepResponse QueryProcessStepV20(Guid sessionId, v20.LLMResponse? llmResponse)
+    internal static v20.RetrievalProcessStepResponse QueryProcessStepV20(Guid sessionId, v20.LLMResponse? llmResponse)
     {
         if (!SESSIONS.TryGetValue(sessionId, out var session))
             throw new ArgumentOutOfRangeException(nameof(sessionId), "Invalid session ID.");
@@ -232,7 +235,7 @@ public static class RetrievalV2
     /// <param name="sessionId">The ID of the retrieval session. You get this ID when announcing the session.</param>
     /// <returns>The retrieval results.</returns>
     /// <exception cref="ArgumentOutOfRangeException">Thrown when the session ID is unknown.</exception>
-    private static v20.RetrievalResult GetResultsV20(Guid sessionId)
+    internal static v20.RetrievalResult GetResultsV20(Guid sessionId)
     {
         if (!SESSIONS.TryGetValue(sessionId, out var session))
             throw new ArgumentOutOfRangeException(nameof(sessionId), "Invalid session ID.");
@@ -288,7 +291,7 @@ public static class RetrievalV2
     /// <returns>A stream of SSE (Server-Sent Events) messages containing the chat completion.</returns>
     /// <exception cref="ArgumentOutOfRangeException">Thrown if the provided session ID is invalid or does not exist.</exception>
     /// <exception cref="InvalidOperationException">Thrown if the retrieval process is not done yet.</exception>
-    private static async IAsyncEnumerable<string> ChatCompletionV20(HttpContext context, IList<v20.ChatMessage> messages, Guid sessionId)
+    internal static async IAsyncEnumerable<string> ChatCompletionV20(HttpContext context, IList<v20.ChatMessage> messages, Guid sessionId)
     {
         if (!SESSIONS.TryGetValue(sessionId, out var session))
             throw new ArgumentOutOfRangeException(nameof(sessionId), "Invalid session ID.");

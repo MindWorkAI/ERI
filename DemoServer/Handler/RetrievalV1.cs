@@ -16,39 +16,42 @@ public static class RetrievalV1
         },
     ];
 
-    public static void AddRetrievalV1Handlers(this IEndpointRouteBuilder app)
+    extension(IEndpointRouteBuilder app)
     {
-        var router = app.MapGroup("/retrieval")
-            .WithTags(TAG)
-            .WithApiVersionSet(Versions.SET_ALL_V1_ONLY);
+        public void AddRetrievalV1Handlers()
+        {
+            var router = app.MapGroup("/retrieval")
+                .WithTags(TAG)
+                .WithApiVersionSet(Versions.SET_ALL_V1_ONLY);
 
-        router.MapGet("/info", GetRetrievalInfoV10)
-            .WithDescription("Get information about the retrieval processes implemented by this data source.")
-            .WithName("GetRetrievalInfoV10")
-            .MapToApiVersion(Versions.V1_0);
-        
-        router.MapGet("/info", GetRetrievalInfoV11)
-            .WithDescription("Get information about the retrieval processes implemented by the specified data source.")
-            .WithName("GetRetrievalInfoV1.1+")
-            .MapToApiVersion(Versions.V1_1)
-            .MapToApiVersion(Versions.V2_0);
+            router.MapGet("/info", GetRetrievalInfoV10)
+                .WithDescription("Get information about the retrieval processes implemented by this data source.")
+                .WithName("GetRetrievalInfoV10")
+                .MapToApiVersion(Versions.V1_0);
+            
+            router.MapGet("/info", GetRetrievalInfoV11)
+                .WithDescription("Get information about the retrieval processes implemented by the specified data source.")
+                .WithName("GetRetrievalInfoV1.1+")
+                .MapToApiVersion(Versions.V1_1)
+                .MapToApiVersion(Versions.V2_0);
 
-        router.MapPost("/", RetrieveV10)
-            .WithDescription("Retrieve information from the data source.")
-            .WithName("RetrieveV10")
-            .MapToApiVersion(Versions.V1_0);
+            router.MapPost("/", RetrieveV10)
+                .WithDescription("Retrieve information from the data source.")
+                .WithName("RetrieveV10")
+                .MapToApiVersion(Versions.V1_0);
 
-        router.MapPost("/", RetrieveV11)
-            .WithDescription("Retrieve information from the specified data source.")
-            .WithName("RetrieveV1.1")
-            .MapToApiVersion(Versions.V1_1);
+            router.MapPost("/", RetrieveV11)
+                .WithDescription("Retrieve information from the specified data source.")
+                .WithName("RetrieveV1.1")
+                .MapToApiVersion(Versions.V1_1);
+        }
     }
 
     /// <summary>
     /// Get information about the retrieval processes implemented by this data source.
     /// </summary>
     /// <returns>Information about the retrieval processes implemented by this data source.</returns>
-    private static v10.RetrievalInfo[] GetRetrievalInfoV10() => RETRIEVAL_INFO;
+    internal static v10.RetrievalInfo[] GetRetrievalInfoV10() => RETRIEVAL_INFO;
     
     /// <summary>
     /// Get information about the retrieval processes implemented by the specified data source.
@@ -56,7 +59,7 @@ public static class RetrievalV1
     /// <param name="dataSourceId">The data source ID for which to get the retrieval information.</param>
     /// <returns>Information about the retrieval processes implemented by the specified data source.</returns>
     /// <exception cref="ArgumentOutOfRangeException">Thrown if the data source ID is unknown.</exception>
-    private static v10.RetrievalInfo[] GetRetrievalInfoV11(int dataSourceId)
+    internal static v10.RetrievalInfo[] GetRetrievalInfoV11(int dataSourceId)
     {
         if(dataSourceId != 0)
             throw new ArgumentOutOfRangeException(nameof(dataSourceId), "Invalid data source ID.");
@@ -69,7 +72,7 @@ public static class RetrievalV1
     /// </summary>
     /// <param name="request">The retrieval request.</param>
     /// <returns>The retrieval results.</returns>
-    private static List<v10.Context> RetrieveV10(v10.RetrievalRequest request)
+    internal static List<v10.Context> RetrieveV10(v10.RetrievalRequest request)
     {
         //
         // We use a simple demo retrieval process here, without any embedding.
@@ -109,7 +112,7 @@ public static class RetrievalV1
     /// <param name="request">The retrieval request.</param>
     /// <returns>The retrieval results.</returns>
     /// <exception cref="ArgumentOutOfRangeException">Thrown if the data source ID is unknown.</exception>
-    private static List<v11.Context> RetrieveV11(int dataSourceId, v10.RetrievalRequest request)
+    internal static List<v11.Context> RetrieveV11(int dataSourceId, v10.RetrievalRequest request)
     {
         if(dataSourceId != 0)
             throw new ArgumentOutOfRangeException(nameof(dataSourceId), "Invalid data source ID.");

@@ -24,6 +24,9 @@
 .idea/**/uiDesigner.xml
 .idea/**/dbnavigator.xml
 
+# Ignore GitHub Copilot migration files:
+**/copilot.data.migration.*.xml
+
 # Gradle
 .idea/**/gradle.xml
 .idea/**/libraries

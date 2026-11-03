@@ -6,14 +6,17 @@ namespace DemoServer;
 
 public static class ConfigureSwaggerUI
 {
-    public static void Configure(this SwaggerUIOptions options, IReadOnlyCollection<ApiVersionDescription> apiVersions)
+    extension(SwaggerUIOptions options)
     {
-        foreach (var apiVersion in apiVersions)
+        public void Configure(IReadOnlyCollection<ApiVersionDescription> apiVersions)
         {
-            var url = $"/specification/v{apiVersion.ApiVersion}.json";
-            options.SwaggerEndpoint(url, apiVersion.GroupName);
+            foreach (var apiVersion in apiVersions)
+            {
+                var url = $"/specification/v{apiVersion.ApiVersion}.json";
+                options.SwaggerEndpoint(url, apiVersion.GroupName);
+            }
+            
+            options.RoutePrefix = "specification";
         }
-        
-        options.RoutePrefix = "specification";
     }
 }

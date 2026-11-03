@@ -13,24 +13,27 @@ public static class Server
         PrivacyPolicyUrl: null,
         UHDUrl: null);
 
-    public static void AddServerHandlers(this IEndpointRouteBuilder app)
+    extension(IEndpointRouteBuilder app)
     {
-        var router = app.MapGroup("/server")
-            .WithTags(TAG)
-            .WithApiVersionSet(Versions.SET_V1_1_AND_ABOVE);
+        public void AddServerHandlers()
+        {
+            var router = app.MapGroup("/server")
+                .WithTags(TAG)
+                .WithApiVersionSet(Versions.SET_V1_1_AND_ABOVE);
 
-        router.MapGet("/", GetServerInfoV11)
-            .WithDescription("""
-                             Get information about the ERI server.<br/><br/>
-                             
-                             This call requires no authentication.
-                             """)
-            .WithName("GetServerInfoV1.1+");
+            router.MapGet("/", GetServerInfoV11)
+                .WithDescription("""
+                                 Get information about the ERI server.<br/><br/>
+                                 
+                                 This call requires no authentication.
+                                 """)
+                .WithName("GetServerInfoV1.1+");
+        }
     }
     
     /// <summary>
     /// Get information about the ERI server.
     /// </summary>
     /// <returns>Information about the ERI server.</returns>
-    private static v11.ServerInfo GetServerInfoV11() => SERVER_INFO;
+    internal static v11.ServerInfo GetServerInfoV11() => SERVER_INFO;
 }
